@@ -1,0 +1,66 @@
+1.	Check if an email exist
+1.	SELECT * FROM users WHERE email = '<email_value>';
+2.	Retrieve email address via user email
+1.	SELECT * FROM users WHERE email = '<email_value>';
+3.	Add new user
+1.	INSERT INTO users (first_name, last_name, email, dob, password, hometown, gender, posts) VALUES ('<first_name_value>', '<last_name_value>','<email_value>',TO_DATE('dob_value','mm/dd/yyyy'),'<password_value>','<hometown_vale>', '<gender_value>',<posts_value>);
+4.	Add a follower via username
+1.	INSERT INTO followers (since, follower_one_id, follower_two_id) VALUES (TO_DATE('<since_value>','mm/dd/yyyy'),<follower_one_id_value>,<follower_two_value>)
+5.	Remove followers via username
+1.	DELETE FROM followers WHERE follower_one_id = <follower_one_id_value> AND follower_two_id = <follower_one_id_value>;
+6.	Retrieve a list of followers via username
+1.	SELECT * FROM followers WHERE (SELECT user_id FROM users WHERE email = '<email_value>') = follower_one_id
+7.	Search for users via username
+1.	SELECT * FROM users WHERE email = '<email_value>’
+8.	Change user attributes
+1.	Change first name
+1.	UPDATE users SET first_name = '<first_name_value>' WHERE email = '<email_value>';
+2.	Change last name
+1.	UPDATE users SET last_name = '<last_name_value>' WHERE email = '<email_value>';
+3.	Change date of birth
+1.	UPDATE users SET dob = to_date('<dob_value>','mm/dd/yyyy') WHERE email = 'email_value';
+4.	Change hometown
+1.	UPDATE users SET hometown = '<hometown_value>' WHERE email = '<email_value>';
+5.	Change gender
+1.	UPDATE users SET gender = '<gender_value>' WHERE email = '<email_value>';
+6.	Change password
+1.	UPDATE users SET password = '<password_value>' WHERE email = '<email_value>';
+post management
+1.	Create an post under user
+1.	INSERT INTO posts (post_name, owner_id) VALUES ('<post_name_value>', (SELECT user_id FROM users WHERE email = '<email_value>'))
+2.	Add post under post
+1.	INSERT INTO posts (post_id, post_url, caption) VALUES (, 'some url', 'this is the caption')
+3.	Retrieve posts by user
+1.	SELECT * FROM posts WHERE owner_id = (SELECT user_id FROM users WHERE email = '<email_value>');
+4.	Retrieve posts by post
+1.	SELECT * FROM posts WHERE post_id = <post_id_value>;
+5.	Add like to post
+1.	INSERT INTO likes (user_id, post_id) VALUES (<user_id_value>,<post_id_value>)
+6.	Remove a like from a post
+1.	DELETE FROM likes WHERE user_id = <user_id_value> and post_id = <post_id_value>;
+7.	Delete post
+1.	DELETE FROM posts WHERE post_id = <post_id_value>;
+8.	Delete post
+1.	DELETE FROM posts WHERE post_id = <post_id_value>;
+Tag Management
+1.	Retrieve posts under a user with tag
+1.	SELECT posts.* FROM posts INNER JOIN tags on posts.post_id = (SELECT post_id FROM tags WHERE tag_name = '<tag_name_value>') WHERE post_id in (SELECT post_id FROM users WHERE email = '<email_value>')
+2.	Retrieve posts with tag
+1.	SELECT * FROM posts WHERE post_id IN (SELECT post_id FROM tags);
+3.	Retrieve most frequent tags
+1.	SELECT tag_name, count(*) FROM tags GROUP BY tag_name LIMIT 10
+Comments
+1.	Add comment under post
+1.	INSERT INTO comments (content, owner_id, post_id) VALUES ('<content_value>', <owner_id_value>, <post_id_value>);
+2.	Delete a comment
+1.	DELETE FROM comments WHERE comment_id = <comment_id_value>;
+3.	Retrieve comments by post
+1.	SELECT * FROM comments WHERE post_id = <post_id_value>;
+4.	Retrieve comments by post and keywords
+1.	SELECT * FROM comments WHERE post_id = <post_id_value> AND content LIKE '%<keyword_value>%’
+Recommendations
+1.	Retrieve followers of followers
+a.	SELECT * FROM users where user_id in (SELECT follower_two_id FROM followers WHERE follower_one_id = <follower_one_id_value>);
+2.	Retrieve posts with users most used tags
+a.	SELECT * FROM users WHERE user_id IN (SELECT follower_two_id FROM followers WHERE follower_one_id IN (SELECT follower_two_id FROM followers WHERE follower_one_id = <follower_one_id_value>)) AND user_id NOT IN (SELECT user_id FROM users WHERE user_id IN (SELECT follower_two_id FROM followers WHERE follower_one_id = <follower_one_id_value>))
+
